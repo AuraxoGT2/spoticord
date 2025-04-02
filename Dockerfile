@@ -63,4 +63,7 @@ RUN if [ "${TARGETPLATFORM}" = "linux/amd64" ]; then \
 # Delete unused binaries
 RUN rm -rvf /tmp/x86_64 /tmp/aarch64
 
+EXPOSE 10000
+
+
 ENTRYPOINT [ "/usr/local/bin/spoticord" ]
