@@ -31,7 +31,7 @@ RUN rustup target add x86_64-unknown-linux-gnu aarch64-unknown-linux-gnu
 
 # Add `--no-default-features` if you don't want stats collection
 # FIX: Adjusted 'id=' for cache mounts to be more generic, as required by Docker BuildKit/Railway
-RUN RUN --mount=type=cache,target=/usr/local/cargo/registry \
+RUN --mount=type=cache,target=/usr/local/cargo/registry \
     --mount=type=cache,target=/app/target \
     cargo build --release --target=x86_64-unknown-linux-gnu && \
     RUSTFLAGS="-L /app/postgresql-${PGVER}/src/interfaces/libpq -C linker=aarch64-linux-gnu-gcc" cargo build --release --target=aarch64-unknown-linux-gnu && \
