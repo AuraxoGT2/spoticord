@@ -30,9 +30,9 @@ COPY . .
 RUN rustup target add x86_64-unknown-linux-gnu aarch64-unknown-linux-gnu
 
 # Add `--no-default-features` if you don't want stats collection
-# FIX: Added 'id=' with a prefix to cache mounts as required by Docker BuildKit/Railway
-RUN --mount=type=cache,id=spoticord-cache-cargo-registry,target=/usr/local/cargo/registry \
-    --mount=type=cache,id=spoticord-cache-app-target,target=/app/target \
+# FIX: Adjusted 'id=' for cache mounts to be more generic, as required by Docker BuildKit/Railway
+RUN --mount=type=cache,id=build-cache-cargo-registry,target=/usr/local/cargo/registry \
+    --mount=type=cache,id=build-cache-app-target,target=/app/target \
     cargo build --release --target=x86_64-unknown-linux-gnu && \
     RUSTFLAGS="-L /app/postgresql-${PGVER}/src/interfaces/libpq -C linker=aarch64-linux-gnu-gcc" cargo build --release --target=aarch64-unknown-linux-gnu && \
     # Copy the executables outside of /target as it'll get unmounted after this RUN command
