@@ -1,66 +1,61 @@
-# This Dockerfile has been specifically crafted to be run on an AMD64 build host, where
-# the build should compile for both amd64 and arm64 targets
-#
-# Building on any other platform, or building for only a single target will be significantly
-# slower compared to a platform agnostic Dockerfile, or might not work at all
-#
-# This has been done to make this file be optimized for use within GitHub Actions,
-# as using QEMU to compile takes way too long (multiple hours)
+# This Dockerfile has been optimized for single-target compilation (AMD64)
+# for faster builds on platforms like Railway's free tier.
+# It removes the ARM64 cross-compilation steps.
 
 # Builder
+# Specify platform for the builder stage explicitly to ensure AMD64 toolchain
 FROM --platform=linux/amd64 rust:1.80.1-slim AS builder
 
 WORKDIR /app
 
 # Add extra build dependencies here
+# Removed gcc-aarch64-linux-gnu and binutils-aarch64-linux-gnu as we no longer cross-compile
 RUN apt-get update && apt install -yqq \
-    cmake gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu libpq-dev curl bzip2
+    cmake curl bzip2 libpq-dev
 
-# Manually compile an arm64 build of libpq
-ENV PGVER=16.4
-RUN curl -o postgresql.tar.bz2 https://ftp.postgresql.org/pub/source/v${PGVER}/postgresql-${PGVER}.tar.bz2 && \
-    tar xjf postgresql.tar.bz2 && \
-    cd postgresql-${PGVER} && \
-    ./configure --host=aarch64-linux-gnu --enable-shared --disable-static --without-readline --without-zlib --without-icu && \
-    cd src/interfaces/libpq && \
-    make
+# Removed manual ARM64 compilation of libpq as it's no longer needed
+# ENV PGVER=16.4
+# RUN curl -o postgresql.tar.bz2 https://ftp.postgresql.org/pub/source/v${PGVER}/postgresql-${PGVER}.tar.bz2 && \
+#     tar xjf postgresql.tar.bz2 && \
+#     cd postgresql-${PGVER} && \
+#     ./configure --host=aarch64-linux-gnu --enable-shared --disable-static --without-readline --without-zlib --without-icu && \
+#     cd src/interfaces/libpq && \
+#     make
 
 COPY . .
 
-RUN rustup target add x86_64-unknown-linux-gnu aarch64-unknown-linux-gnu
+# Removed adding aarch64 target as we only build for x86_64
+RUN rustup target add x86_64-unknown-linux-gnu
 
 # Add `--no-default-features` if you don't want stats collection
-# FIX: Adjusted 'id=' for cache mounts to be more generic, as required by Docker BuildKit/Railway
-RUN cargo build --release --target=x86_64-unknown-linux-gnu && \
-    RUSTFLAGS="-L /app/postgresql-${PGVER}/src/interfaces/libpq -C linker=aarch64-linux-gnu-gcc" cargo build --release --target=aarch64-unknown-linux-gnu && \
-    cp /app/target/x86_64-unknown-linux-gnu/release/spoticord /app/x86_64 && \
-    cp /app/target/aarch64-unknown-linux-gnu/release/spoticord /app/aarch64
-
+# Using optimized cache mount IDs (from previous fix)
+RUN --mount=type=cache,id=build-cache-cargo-registry,target=/usr/local/cargo/registry \
+    --mount=type=cache,id=build-cache-app-target,target=/app/target \
+    cargo build --release --target=x86_64-unknown-linux-gnu && \
+    # Only copy the x86_64 executable
+    cp /app/target/x86_64-unknown-linux-gnu/release/spoticord /app/spoticord_final_binary
 
 # Runtime
 FROM debian:bookworm-slim
 
-ARG TARGETPLATFORM
-ENV TARGETPLATFORM=${TARGETPLATFORM}
+# Removed TARGETPLATFORM ARG/ENV as we only have one target now
+# ARG TARGETPLATFORM
+# ENV TARGETPLATFORM=${TARGETPLATFORM}
 
 # Add extra runtime dependencies here
 RUN apt update && apt install -y ca-certificates libpq-dev
 
-# Copy spoticord binaries from builder to /tmp so we can dynamically use them
+# Copy only the single compiled binary
 COPY --from=builder \
-    /app/x86_64 /tmp/x86_64
-COPY --from=builder \
-    /app/aarch64 /tmp/aarch64
+    /app/spoticord_final_binary /usr/local/bin/spoticord
 
-# Copy appropriate binary for target arch from /tmp
-RUN if [ "${TARGETPLATFORM}" = "linux/amd64" ]; then \
-    cp /tmp/x86_64 /usr/local/bin/spoticord; \
-    elif [ "${TARGETPLATFORM}" = "linux/arm64" ]; then \
-    cp /tmp/aarch64 /usr/local/bin/spoticord; \
-    fi
-
-# Delete unused binaries
-RUN rm -rvf /tmp/x86_64 /tmp/aarch64
+# Removed conditional copy and deletion of unused binaries
+# RUN if [ "${TARGETPLATFORM}" = "linux/amd64" ]; then \
+#     cp /tmp/x86_64 /usr/local/bin/spoticord; \
+#     elif [ "${TARGETPLATFORM}" = "linux/arm64" ]; then \
+#     cp /tmp/aarch64 /usr/local/bin/spoticord; \
+#     fi
+# RUN rm -rvf /tmp/x86_64 /tmp/aarch64
 
 EXPOSE 10000
 
