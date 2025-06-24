@@ -27,11 +27,8 @@ COPY . .
 # Removed adding aarch64 target as we only build for x86_64
 RUN rustup target add x86_64-unknown-linux-gnu
 
-# Add `--no-default-features` if you don't want stats collection
-# Using optimized cache mount IDs (from previous fix)
-RUN --mount=type=cache,id=build-cache-cargo-registry,target=/usr/local/cargo/registry \
-    --mount=type=cache,id=build-cache-app-target,target=/app/target \
-    cargo build --release --target=x86_64-unknown-linux-gnu && \
+# Removed cache mount directives to bypass persistent Railway build error
+RUN cargo build --release --target=x86_64-unknown-linux-gnu && \
     # Only copy the x86_64 executable
     cp /app/target/x86_64-unknown-linux-gnu/release/spoticord /app/spoticord_final_binary
 
