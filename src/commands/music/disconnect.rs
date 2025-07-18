@@ -6,8 +6,15 @@ use spoticord_utils::discord::Colors;
 
 use crate::bot::Context;
 
-#[poise::command(slash_command, guild_only)]
-pub async fn disconnect(ctx: Context<'_>) -> Result<(), Error> {
+// highlight-start
+#[poise::command(
+    slash_command,
+    guild_only,
+    name = "atsijungti",
+    description = "Atjungia botą iš balso kanalo."
+)]
+pub async fn atsijungti(ctx: Context<'_>) -> Result<(), Error> {
+// highlight-end
     let manager = ctx.data();
     let guild = ctx.guild_id().expect("poise lied to me");
 
@@ -17,7 +24,8 @@ pub async fn disconnect(ctx: Context<'_>) -> Result<(), Error> {
                 .embed(
                     CreateEmbed::new()
                         .title("Negaliu atsijungti")
-                        .description("Aš nesu jokiame kanale.")
+                        // highlight-next-line
+                        .description("Aš neprisijungęs prie jokio balso kanalo.")
                         .color(Colors::Error),
                 )
                 .ephemeral(true),
@@ -32,8 +40,10 @@ pub async fn disconnect(ctx: Context<'_>) -> Result<(), Error> {
             CreateReply::default()
                 .embed(
                     CreateEmbed::new()
-                        .title("Negaliu atsijungti")
-                        .description("Tik muzikos leidėjas gali atlikti šį veiksmą.")
+                        // highlight-start
+                        .title("Veiksmas negalimas")
+                        .description("Atjungti botą gali tik seansą pradėjęs narys.")
+                        // highlight-end
                         .color(Colors::Error),
                 )
                 .ephemeral(true),
@@ -48,8 +58,10 @@ pub async fn disconnect(ctx: Context<'_>) -> Result<(), Error> {
     ctx.send(
         CreateReply::default().embed(
             CreateEmbed::new()
-                .title("Atsijungimas!")
-                .description("Atsijungta, naudokite /join komandą kad prisijungčiau.")
+                // highlight-start
+                .title("Atsijungiau!")
+                .description("Sėkmingai atsijungiau. Naudokite `/prisijungti`, kad vėl mane pakviestumėte.")
+                // highlight-end
                 .color(Colors::Info),
         ),
     )
