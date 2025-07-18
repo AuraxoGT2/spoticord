@@ -330,8 +330,8 @@ impl Session {
                         &self.context,
                         CreateMessage::new().embed(
                             CreateEmbed::new()
-                                .title("It's a little quiet in here")
-                                .description("The bot has been inactive for too long, and has been disconnected.")
+                                .title("AFK")
+                                .description("Ilgai niekas negrojo todėl botas atsijungė.")
                                 .color(Colors::Warning),
                         ),
                     )
@@ -359,8 +359,8 @@ impl Session {
                         &self.context,
                         CreateMessage::new().embed(
                             CreateEmbed::new()
-                                .title("Spotify connection lost")
-                                .description("The bot has lost connection to the Spotify AP servers.\nThis is most likely caused by a connection reset on Spotify's end.\n\nUse `/join` to resummon the bot to your voice channel.")
+                                .title("Spotify ryšys prarastas")
+                                .description("Botas prarado ryšį su Spotify serveriais.\n Daugiausia šansų kad tai Spotify kaltė.\n\nNaudokite /join kad galėtumėte toliau klausytis muzikos.")
                                 .color(Colors::Error),
                         ),
                     )
