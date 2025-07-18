@@ -10,7 +10,7 @@ pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 pub const VERSION: &str = concat!(env!("CARGO_PKG_VERSION"), "-dev");
 
 /// The "listening to" message that shows up under the Spoticord bot user
-pub const MOTD: &str = "some good 'ol music";
+pub const MOTD: &str = "/join";
 
 /// The time it takes (in seconds) for Spoticord to disconnect when no music is being played
 pub const DISCONNECT_TIME: u64 = 5 * 60;
