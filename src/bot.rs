@@ -30,7 +30,7 @@ pub fn framework_opts() -> FrameworkOptions<Data, anyhow::Error> {
             commands::core::link(),
             commands::core::unlink(),
             commands::music::join(),
-            commands::music::disconnect(),
+            commands::music::atsijungti(),
             commands::music::stop(),
             commands::music::playing(),
             commands::music::lyrics(),
