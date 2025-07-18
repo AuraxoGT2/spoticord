@@ -48,8 +48,8 @@ pub async fn join(ctx: Context<'_>) -> Result<()> {
             CreateReply::default()
                 .embed(
                     CreateEmbed::new()
-                        .title("Cannot join voice channel")
-                        .description("You need to connect to a voice channel before running /join")
+                        .title("Negaliu prisijungti")
+                        .description("Turite būti kanale kad galėtumėte naudoti /join")
                         .color(Colors::Error),
                 )
                 .ephemeral(true),
@@ -83,9 +83,9 @@ pub async fn join(ctx: Context<'_>) -> Result<()> {
             CreateReply::default()
                 .embed(
                     CreateEmbed::new()
-                        .title("Cannot join voice channel")
+                        .title("Negalima prisijungti")
                         .description(
-                            "I do not have permissions to send messages / links in this text channel.",
+                            "Neturiu leidimo pasiekti tavo kanalą.",
                         )
                         .color(Colors::Error),
                 )
@@ -106,9 +106,9 @@ pub async fn join(ctx: Context<'_>) -> Result<()> {
             CreateReply::default()
                 .embed(
                     CreateEmbed::new()
-                        .title("No Spotify account")
+                        .title("Nėra Spotify paskyros")
                         .description(
-                            "You need to link your Spotify account to Spoticord before being able to use it.\nUse the `/link` command to link your account.",
+                            "Tau reikia prisijungti savo spotify paskyra kad galėtum naudotis botu.\nNaudok /link komandą.",
                         )
                         .color(Colors::Error),
                 )
@@ -128,8 +128,8 @@ pub async fn join(ctx: Context<'_>) -> Result<()> {
                 CreateReply::default()
                     .embed(
                         CreateEmbed::new()
-                            .title("Spoticord is busy")
-                            .description("Spoticord is already being used in this server.")
+                            .title("Spotify Užsiėmes")
+                            .description("Spotify jau yra naudojamas šiame serveryje.")
                             .color(Colors::Error),
                     )
                     .ephemeral(true),
@@ -148,10 +148,10 @@ pub async fn join(ctx: Context<'_>) -> Result<()> {
             CreateReply::default()
                 .embed(
                     CreateEmbed::new()
-                        .title("You are already using Spoticord")
+                        .title("Tu jau naudoti Spotify")
                         .description(format!(
-                            "You are already using Spoticord in `{}`\n\n\
-                            Stop playing in that server first before starting a new session.",
+                            "Jau naudoji Spotify `{}`\n\n\
+                            Sustabdyk savo sesija prieš pradedant naują.",
                             spoticord_utils::discord::escape(server_name)
                         ))
                         .color(Colors::Error),
@@ -232,12 +232,12 @@ pub async fn join(ctx: Context<'_>) -> Result<()> {
         CreateReply::default().embed(
             CreateEmbed::new()
                 .author(
-                    CreateEmbedAuthor::new("Connected to voice channel")
+                    CreateEmbedAuthor::new("Prisijungta prie kanalo")
                         .icon_url("https://spoticord.com/speaker.png"),
                 )
-                .description(format!("Come listen along in <#{}>", channel))
+                .description(format!("Ateikite paklausyti muzikos į <#{}>", channel))
                 .footer(CreateEmbedFooter::new(
-                    "You must manually select your device in Spotify",
+                    "Turite pasirinkti bota per spotify",
                 ))
                 .color(Colors::Info),
         ),
