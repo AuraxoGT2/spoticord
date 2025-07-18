@@ -32,8 +32,8 @@ pub async fn stop(ctx: Context<'_>) -> Result<(), Error> {
             CreateReply::default()
                 .embed(
                     CreateEmbed::new()
-                        .title("Cannot stop playback")
-                        .description("Only the host may stop playback.")
+                        .title("Negalima sustabdyti")
+                        .description("Tik muzikos leidėjas gali atlikti šį veiksmą.")
                         .color(Colors::Error),
                 )
                 .ephemeral(true),
@@ -48,8 +48,8 @@ pub async fn stop(ctx: Context<'_>) -> Result<(), Error> {
     ctx.send(
         CreateReply::default().embed(
             CreateEmbed::new()
-                .title("Stopped playback")
-                .description("I have stopped playing for now. To resume playback, please run the /join command again.")
+                .title("Muzika sustabdyta")
+                .description("Muzika sustabdyta norint paleisti iš naujo naudokite /join.")
                 .color(Colors::Info),
         ),
     )
