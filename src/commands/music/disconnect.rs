@@ -13,7 +13,7 @@ use crate::bot::Context;
     name = "atsijungti",
     description = "Atjungia botą iš balso kanalo."
 )]
-pub async fn atsijungti(ctx: Context<'_>) -> Result<(), Error> {
+pub async fn disconnect(ctx: Context<'_>) -> Result<(), Error> {
 // highlight-end
     let manager = ctx.data();
     let guild = ctx.guild_id().expect("poise lied to me");
