@@ -16,8 +16,8 @@ pub async fn disconnect(ctx: Context<'_>) -> Result<(), Error> {
             CreateReply::default()
                 .embed(
                     CreateEmbed::new()
-                        .title("Cannot disconnect bot")
-                        .description("I'm currently not connected to any voice channel.")
+                        .title("Negaliu atsijungti")
+                        .description("Aš nesu jokiame kanale.")
                         .color(Colors::Error),
                 )
                 .ephemeral(true),
@@ -32,8 +32,8 @@ pub async fn disconnect(ctx: Context<'_>) -> Result<(), Error> {
             CreateReply::default()
                 .embed(
                     CreateEmbed::new()
-                        .title("Cannot disconnect bot")
-                        .description("Only the host may disconnect the bot.")
+                        .title("Negaliu atsijungti")
+                        .description("Tik muzikos leidėjas gali atlikti šį veiksmą.")
                         .color(Colors::Error),
                 )
                 .ephemeral(true),
@@ -48,8 +48,8 @@ pub async fn disconnect(ctx: Context<'_>) -> Result<(), Error> {
     ctx.send(
         CreateReply::default().embed(
             CreateEmbed::new()
-                .title("Goodbye, for now!")
-                .description("I have left the voice channel, goodbye for now.")
+                .title("Atsijungimas!")
+                .description("Atsijungta, naudokite /join komandą kad prisijungčiau.")
                 .color(Colors::Info),
         ),
     )
